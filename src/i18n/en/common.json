@@ -1,0 +1,9 @@
+{
+  "hello": "Hello World!",
+  "errors": {
+    "not_found": "Resource not found",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "internal_server_error": "Internal server error"
+  }
+}

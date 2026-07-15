@@ -1,0 +1,9 @@
+{
+  "hello": "Xin chào thế giới!",
+  "errors": {
+    "not_found": "Không tìm thấy tài nguyên",
+    "unauthorized": "Chưa xác thực",
+    "forbidden": "Không có quyền truy cập",
+    "internal_server_error": "Lỗi máy chủ nội bộ"
+  }
+}
