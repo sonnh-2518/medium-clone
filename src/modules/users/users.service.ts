@@ -28,8 +28,12 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { email } });
   }
 
-  findByUsername(username: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { username } });
+  existsByEmail(email: string): Promise<boolean> {
+    return this.usersRepository.existsBy({ email });
+  }
+
+  existsByUsername(username: string): Promise<boolean> {
+    return this.usersRepository.existsBy({ username });
   }
 
   create(data: Partial<User>): Promise<User> {
@@ -48,14 +52,14 @@ export class UsersService {
     const user = await this.getProfile(userId);
 
     if (dto.email && dto.email !== user.email) {
-      if (await this.findByEmail(dto.email)) {
+      if (await this.existsByEmail(dto.email)) {
         throw new ConflictException(this.translate('auth.email_taken'));
       }
       user.email = dto.email;
     }
 
     if (dto.username && dto.username !== user.username) {
-      if (await this.findByUsername(dto.username)) {
+      if (await this.existsByUsername(dto.username)) {
         throw new ConflictException(this.translate('auth.username_taken'));
       }
       user.username = dto.username;

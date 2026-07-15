@@ -24,10 +24,10 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto): Promise<AuthResponseDto> {
-    if (await this.usersService.findByEmail(dto.email)) {
+    if (await this.usersService.existsByEmail(dto.email)) {
       throw new ConflictException(this.translate('auth.email_taken'));
     }
-    if (await this.usersService.findByUsername(dto.username)) {
+    if (await this.usersService.existsByUsername(dto.username)) {
       throw new ConflictException(this.translate('auth.username_taken'));
     }
 
