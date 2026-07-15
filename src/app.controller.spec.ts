@@ -1,24 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { I18nService } from 'nestjs-i18n';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import * as i18nUtil from './common/utils/i18n.util';
 
 describe('AppController', () => {
   let appController: AppController;
 
   beforeEach(async () => {
+    jest.spyOn(i18nUtil, 't').mockReturnValue('Hello World!');
+
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [
-        AppService,
-        {
-          provide: I18nService,
-          useValue: { t: jest.fn().mockReturnValue('Hello World!') },
-        },
-      ],
+      providers: [AppService],
     }).compile();
 
     appController = app.get<AppController>(AppController);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   describe('hello', () => {

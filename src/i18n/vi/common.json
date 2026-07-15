@@ -5,5 +5,10 @@
     "unauthorized": "Chưa xác thực",
     "forbidden": "Không có quyền truy cập",
     "internal_server_error": "Lỗi máy chủ nội bộ"
+  },
+  "auth": {
+    "email_taken": "Email đã được sử dụng",
+    "username_taken": "Tên người dùng đã được sử dụng",
+    "invalid_credentials": "Email hoặc mật khẩu không đúng"
   }
 }

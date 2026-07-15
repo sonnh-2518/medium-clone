@@ -29,6 +29,40 @@
 
 ```bash
 $ pnpm install
+
+# create your local env file, then adjust DB credentials if needed
+$ cp .env.example .env
+```
+
+## Database
+
+The project uses PostgreSQL with [TypeORM](https://typeorm.io). Schema changes are managed exclusively through migrations (`synchronize: false`).
+
+Start a local PostgreSQL with Docker (or use your own instance and update `.env`):
+
+```bash
+$ docker compose up -d postgres
+```
+
+### Migrations
+
+Migration files live in `src/database/migrations`. The TypeORM CLI is configured via `src/database/data-source.ts`.
+
+```bash
+# run all pending migrations
+$ pnpm migration:run
+
+# show executed / pending migrations
+$ pnpm migration:show
+
+# revert the last executed migration
+$ pnpm migration:revert
+
+# create an empty migration (write the SQL yourself)
+$ pnpm migration:create src/database/migrations/MyMigrationName
+
+# generate a migration from entity changes
+$ pnpm migration:generate src/database/migrations/MyMigrationName
 ```
 
 ## Compile and run the project
