@@ -5,8 +5,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { I18nContext } from 'nestjs-i18n';
 import { JwtPayload } from '../../modules/auth/interfaces/jwt-payload.interface';
+import { t } from '../utils/i18n.util';
 import { AuthenticatedRequest } from '../interfaces/authenticated-request.interface';
 
 @Injectable()
@@ -37,7 +37,7 @@ export class JwtAuthGuard implements CanActivate {
     return type === 'Bearer' ? token : undefined;
   }
 
-  private unauthorizedMessage(): string | undefined {
-    return I18nContext.current()?.t('common.errors.unauthorized');
+  private unauthorizedMessage(): string {
+    return t('common.errors.unauthorized');
   }
 }

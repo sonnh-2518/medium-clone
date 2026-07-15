@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { I18nContext, I18nService } from 'nestjs-i18n';
+import { t } from '../../common/utils/i18n.util';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { AuthResponseDto, UserResponseDto } from './dto/auth-response.dto';
@@ -20,15 +20,14 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-    private readonly i18n: I18nService,
   ) {}
 
   async register(dto: RegisterDto): Promise<AuthResponseDto> {
     if (await this.usersService.existsByEmail(dto.email)) {
-      throw new ConflictException(this.translate('auth.email_taken'));
+      throw new ConflictException(t('common.auth.email_taken'));
     }
     if (await this.usersService.existsByUsername(dto.username)) {
-      throw new ConflictException(this.translate('auth.username_taken'));
+      throw new ConflictException(t('common.auth.username_taken'));
     }
 
     const user = await this.usersService.create({
@@ -46,9 +45,7 @@ export class AuthService {
       user !== null && (await bcrypt.compare(dto.password, user.password));
 
     if (!user || !passwordMatches) {
-      throw new UnauthorizedException(
-        this.translate('auth.invalid_credentials'),
-      );
+      throw new UnauthorizedException(t('common.auth.invalid_credentials'));
     }
 
     return this.buildAuthResponse(user);
@@ -65,11 +62,5 @@ export class AuthService {
       user: UserResponseDto.fromEntity(user),
       accessToken: this.jwtService.sign(payload),
     };
-  }
-
-  private translate(key: string): string {
-    return this.i18n.t(`common.${key}`, {
-      lang: I18nContext.current()?.lang,
-    });
   }
 }
