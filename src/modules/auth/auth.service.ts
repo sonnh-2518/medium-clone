@@ -54,14 +54,6 @@ export class AuthService {
     return this.buildAuthResponse(user);
   }
 
-  async getCurrentUser(userId: number): Promise<UserResponseDto> {
-    const user = await this.usersService.findById(userId);
-    if (!user) {
-      throw new UnauthorizedException(this.translate('errors.unauthorized'));
-    }
-    return this.toUserResponse(user);
-  }
-
   private buildAuthResponse(user: User): AuthResponseDto {
     const payload: JwtPayload = {
       sub: user.id,
@@ -70,14 +62,9 @@ export class AuthService {
     };
 
     return {
-      user: this.toUserResponse(user),
+      user: UserResponseDto.fromEntity(user),
       accessToken: this.jwtService.sign(payload),
     };
-  }
-
-  private toUserResponse(user: User): UserResponseDto {
-    const { id, email, username, bio, image } = user;
-    return { id, email, username, bio, image };
   }
 
   private translate(key: string): string {
