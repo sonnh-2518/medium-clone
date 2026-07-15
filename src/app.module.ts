@@ -1,8 +1,11 @@
 import * as path from 'path';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { databaseConfig } from './config/database.config';
 import { ArticlesModule } from './modules/articles/articles.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CommentsModule } from './modules/comments/comments.module';
@@ -12,6 +15,13 @@ import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      useFactory: () => ({
+        ...databaseConfig(),
+        autoLoadEntities: true,
+      }),
+    }),
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
