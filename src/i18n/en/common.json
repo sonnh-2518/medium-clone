@@ -5,5 +5,10 @@
     "unauthorized": "Unauthorized",
     "forbidden": "Forbidden",
     "internal_server_error": "Internal server error"
+  },
+  "auth": {
+    "email_taken": "Email is already taken",
+    "username_taken": "Username is already taken",
+    "invalid_credentials": "Invalid email or password"
   }
 }
