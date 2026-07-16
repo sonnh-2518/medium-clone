@@ -9,6 +9,7 @@
   "auth": {
     "email_taken": "Email đã được sử dụng",
     "username_taken": "Tên người dùng đã được sử dụng",
-    "invalid_credentials": "Email hoặc mật khẩu không đúng"
+    "invalid_credentials": "Email hoặc mật khẩu không đúng",
+    "invalid_refresh_token": "Refresh token không hợp lệ hoặc đã hết hạn"
   }
 }

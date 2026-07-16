@@ -1,6 +1,7 @@
 import * as path from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import { AppController } from './app.controller';
@@ -16,6 +17,7 @@ import { UsersModule } from './modules/users/users.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         ...databaseConfig(),

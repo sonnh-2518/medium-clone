@@ -9,3 +9,14 @@ export function jwtConfig(): JwtModuleOptions {
     },
   };
 }
+
+export function refreshJwtConfig(): {
+  secret: string;
+  expiresIn: JwtSignOptions['expiresIn'];
+} {
+  return {
+    secret: process.env.JWT_REFRESH_SECRET ?? 'dev-refresh-secret-change-me',
+    expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN ??
+      '7d') as JwtSignOptions['expiresIn'],
+  };
+}
