@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { refreshJwtConfig } from '../../config/jwt.config';
 import { hashToken } from '../../common/utils/token-hash.util';
 import { RefreshToken } from './entities/refresh-token.entity';
@@ -16,7 +16,7 @@ export class RefreshTokenService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async create(payload: JwtPayload): Promise<string> {
+  async create(payload: JwtPayload, manager?: EntityManager): Promise<string> {
     const { secret, expiresIn } = refreshJwtConfig();
     const token = this.jwtService.sign(
       { ...payload, jti: randomUUID() },
@@ -24,7 +24,7 @@ export class RefreshTokenService {
     );
 
     const { exp } = this.jwtService.decode<{ exp: number }>(token);
-    await this.refreshTokenRepository.insert({
+    await this.repository(manager).insert({
       tokenHash: hashToken(token),
       userId: payload.sub,
       expiresAt: new Date(exp * 1000),
@@ -49,11 +49,15 @@ export class RefreshTokenService {
     });
   }
 
-  async revoke(token: string): Promise<void> {
-    await this.refreshTokenRepository.delete({ tokenHash: hashToken(token) });
+  async revoke(token: string, manager?: EntityManager): Promise<void> {
+    await this.repository(manager).delete({ tokenHash: hashToken(token) });
   }
 
   async revokeAllForUser(userId: number): Promise<void> {
     await this.refreshTokenRepository.delete({ userId });
+  }
+
+  private repository(manager?: EntityManager): Repository<RefreshToken> {
+    return manager?.getRepository(RefreshToken) ?? this.refreshTokenRepository;
   }
 }

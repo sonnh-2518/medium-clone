@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { DataSource, EntityManager } from 'typeorm';
 import { t } from '../../common/utils/i18n.util';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
@@ -26,6 +27,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly tokenBlacklistService: TokenBlacklistService,
     private readonly refreshTokenService: RefreshTokenService,
+    private readonly dataSource: DataSource,
   ) {}
 
   async register(dto: RegisterDto): Promise<AuthResponseDto> {
@@ -71,9 +73,12 @@ export class AuthService {
     }
 
     const user = await this.usersService.getProfile(payload.sub);
-    await this.refreshTokenService.revoke(dto.refreshToken);
 
-    return this.buildAuthResponse(user);
+    // Rotate atomically: never delete the old token without storing the new one.
+    return this.dataSource.transaction(async (manager) => {
+      await this.refreshTokenService.revoke(dto.refreshToken, manager);
+      return this.buildAuthResponse(user, manager);
+    });
   }
 
   async logout(accessToken: string, refreshToken?: string): Promise<void> {
@@ -84,14 +89,25 @@ export class AuthService {
       ? new Date(payload.exp * 1000)
       : new Date(Date.now() + DEFAULT_BLACKLIST_TTL_MS);
 
-    await this.tokenBlacklistService.blacklist(accessToken, expiresAt);
+    // Blacklist and revoke together: a blacklisted access token must never
+    // leave a still-usable refresh token behind.
+    await this.dataSource.transaction(async (manager) => {
+      await this.tokenBlacklistService.blacklist(
+        accessToken,
+        expiresAt,
+        manager,
+      );
 
-    if (refreshToken) {
-      await this.refreshTokenService.revoke(refreshToken);
-    }
+      if (refreshToken) {
+        await this.refreshTokenService.revoke(refreshToken, manager);
+      }
+    });
   }
 
-  private async buildAuthResponse(user: User): Promise<AuthResponseDto> {
+  private async buildAuthResponse(
+    user: User,
+    manager?: EntityManager,
+  ): Promise<AuthResponseDto> {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
@@ -101,7 +117,7 @@ export class AuthService {
     return {
       user: UserResponseDto.fromEntity(user),
       accessToken: this.jwtService.sign(payload),
-      refreshToken: await this.refreshTokenService.create(payload),
+      refreshToken: await this.refreshTokenService.create(payload, manager),
     };
   }
 }
