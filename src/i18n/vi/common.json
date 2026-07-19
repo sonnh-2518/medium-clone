@@ -10,5 +10,9 @@
     "email_taken": "Email đã được sử dụng",
     "username_taken": "Tên người dùng đã được sử dụng",
     "invalid_credentials": "Email hoặc mật khẩu không đúng"
+  },
+  "articles": {
+    "not_found": "Không tìm thấy bài viết",
+    "not_author": "Chỉ tác giả mới có thể chỉnh sửa bài viết này"
   }
 }
