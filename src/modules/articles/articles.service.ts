@@ -6,6 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { t } from '../../common/utils/i18n.util';
+import { PaginationMetaDto } from './dto/article-response.dto';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { QueryArticlesDto } from './dto/query-articles.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
@@ -34,7 +35,7 @@ export class ArticlesService {
 
   async findAll(
     query: QueryArticlesDto,
-  ): Promise<{ articles: Article[]; articlesCount: number }> {
+  ): Promise<{ articles: Article[]; meta: PaginationMetaDto }> {
     const { tag, author, limit = 20, offset = 0 } = query;
 
     const qb = this.articlesRepository
@@ -54,8 +55,17 @@ export class ArticlesService {
       qb.andWhere('author.username = :author', { author });
     }
 
-    const [articles, articlesCount] = await qb.getManyAndCount();
-    return { articles, articlesCount };
+    const [articles, totalItems] = await qb.getManyAndCount();
+    return {
+      articles,
+      meta: {
+        totalItems,
+        limit,
+        offset,
+        page: Math.floor(offset / limit) + 1,
+        totalPages: Math.ceil(totalItems / limit),
+      },
+    };
   }
 
   async findBySlugOrFail(slug: string): Promise<Article> {

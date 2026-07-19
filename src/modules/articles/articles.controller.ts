@@ -60,13 +60,12 @@ export class ArticlesController {
   async findAll(
     @Query() query: QueryArticlesDto,
   ): Promise<ArticlesListResponseDto> {
-    const { articles, articlesCount } =
-      await this.articlesService.findAll(query);
+    const { articles, meta } = await this.articlesService.findAll(query);
     return {
       articles: articles.map((article) =>
         ArticleResponseDto.fromEntity(article),
       ),
-      articlesCount,
+      meta,
     };
   }
 

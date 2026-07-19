@@ -73,10 +73,27 @@ export class ArticleResponseDto {
   }
 }
 
+export class PaginationMetaDto {
+  @ApiProperty({ example: 45, description: 'Total number of matching items' })
+  totalItems: number;
+
+  @ApiProperty({ example: 20 })
+  limit: number;
+
+  @ApiProperty({ example: 0 })
+  offset: number;
+
+  @ApiProperty({ example: 1, description: 'Current page (1-based)' })
+  page: number;
+
+  @ApiProperty({ example: 3 })
+  totalPages: number;
+}
+
 export class ArticlesListResponseDto {
   @ApiProperty({ type: [ArticleResponseDto] })
   articles: ArticleResponseDto[];
 
-  @ApiProperty({ example: 1 })
-  articlesCount: number;
+  @ApiProperty({ type: PaginationMetaDto })
+  meta: PaginationMetaDto;
 }
