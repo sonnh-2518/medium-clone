@@ -16,6 +16,10 @@
     "not_found": "Article not found",
     "not_author": "Only the author can modify this article"
   },
+  "comments": {
+    "not_found": "Comment not found",
+    "not_author": "Only the comment author or the article author can delete this comment"
+  },
   "validation": {
     "IS_STRING": "{property} must be a string",
     "IS_NOT_EMPTY": "{property} should not be empty",
