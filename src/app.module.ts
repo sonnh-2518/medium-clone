@@ -10,6 +10,7 @@ import { ArticlesModule } from './modules/articles/articles.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
+import { SchedulerModule } from './modules/scheduler/scheduler.module';
 import { TagsModule } from './modules/tags/tags.module';
 import { UsersModule } from './modules/users/users.module';
 
@@ -39,6 +40,7 @@ import { UsersModule } from './modules/users/users.module';
     ArticlesModule,
     CommentsModule,
     TagsModule,
+    SchedulerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

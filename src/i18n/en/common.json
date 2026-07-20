@@ -9,6 +9,7 @@
   "auth": {
     "email_taken": "Email is already taken",
     "username_taken": "Username is already taken",
-    "invalid_credentials": "Invalid email or password"
+    "invalid_credentials": "Invalid email or password",
+    "invalid_refresh_token": "Invalid or expired refresh token"
   }
 }
