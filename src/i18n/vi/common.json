@@ -14,5 +14,15 @@
   "articles": {
     "not_found": "Không tìm thấy bài viết",
     "not_author": "Chỉ tác giả mới có thể chỉnh sửa bài viết này"
+  },
+  "validation": {
+    "IS_STRING": "{property} phải là chuỗi ký tự",
+    "IS_NOT_EMPTY": "{property} không được để trống",
+    "IS_INT": "{property} phải là số nguyên",
+    "MIN": "{property} không được nhỏ hơn {constraints.0}",
+    "MAX": "{property} không được lớn hơn {constraints.0}",
+    "MAX_LENGTH": "{property} không được dài quá {constraints.0} ký tự",
+    "IS_ARRAY": "{property} phải là một mảng",
+    "ARRAY_UNIQUE": "Các phần tử trong {property} không được trùng lặp"
   }
 }

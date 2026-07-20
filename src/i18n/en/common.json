@@ -14,5 +14,15 @@
   "articles": {
     "not_found": "Article not found",
     "not_author": "Only the author can modify this article"
+  },
+  "validation": {
+    "IS_STRING": "{property} must be a string",
+    "IS_NOT_EMPTY": "{property} should not be empty",
+    "IS_INT": "{property} must be an integer number",
+    "MIN": "{property} must not be less than {constraints.0}",
+    "MAX": "{property} must not be more than {constraints.0}",
+    "MAX_LENGTH": "{property} must be shorter than or equal to {constraints.0} characters",
+    "IS_ARRAY": "{property} must be an array",
+    "ARRAY_UNIQUE": "All {property}'s elements must be unique"
   }
 }
