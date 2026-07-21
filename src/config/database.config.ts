@@ -13,7 +13,9 @@ export function databaseConfig(): DataSourceOptions {
     migrations: [
       path.join(__dirname, '..', 'database', 'migrations', '*.{ts,js}'),
     ],
-    synchronize: false,
+    // Never enabled in production; tests set DB_SYNCHRONIZE=true so the schema
+    // is built from entities against the dedicated test database.
+    synchronize: process.env.DB_SYNCHRONIZE === 'true',
     logging: process.env.DB_LOGGING === 'true',
   };
 }
