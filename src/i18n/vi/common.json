@@ -16,6 +16,10 @@
     "not_found": "Không tìm thấy bài viết",
     "not_author": "Chỉ tác giả mới có thể chỉnh sửa bài viết này"
   },
+  "comments": {
+    "not_found": "Không tìm thấy bình luận",
+    "not_author": "Chỉ tác giả bình luận hoặc tác giả bài viết mới có thể xóa bình luận này"
+  },
   "validation": {
     "IS_STRING": "{property} phải là chuỗi ký tự",
     "IS_NOT_EMPTY": "{property} không được để trống",
