@@ -7,7 +7,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { t } from '../../common/utils/i18n.util';
 import { ArticlesService } from '../articles/articles.service';
+import { PaginationMetaDto } from '../articles/dto/article-response.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { QueryCommentsDto } from './dto/query-comments.dto';
 import { Comment } from './entities/comment.entity';
 
 @Injectable()
@@ -35,14 +37,31 @@ export class CommentsService {
     return this.findByIdOrFail(article.id, saved.id);
   }
 
-  async findAllByArticle(slug: string): Promise<Comment[]> {
+  async findAllByArticle(
+    slug: string,
+    query: QueryCommentsDto,
+  ): Promise<{ comments: Comment[]; meta: PaginationMetaDto }> {
     const article = await this.articlesService.findBySlugOrFail(slug);
+    const { limit = 20, offset = 0 } = query;
 
-    return this.commentsRepository.find({
+    const [comments, totalItems] = await this.commentsRepository.findAndCount({
       where: { articleId: article.id },
       relations: { author: true },
       order: { createdAt: 'ASC' },
+      take: limit,
+      skip: offset,
     });
+
+    return {
+      comments,
+      meta: {
+        totalItems,
+        limit,
+        offset,
+        page: Math.floor(offset / limit) + 1,
+        totalPages: Math.ceil(totalItems / limit),
+      },
+    };
   }
 
   async remove(slug: string, commentId: number, userId: number): Promise<void> {

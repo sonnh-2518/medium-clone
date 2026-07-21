@@ -8,6 +8,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -25,6 +26,7 @@ import {
   CommentsListResponseDto,
 } from './dto/comment-response.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { QueryCommentsDto } from './dto/query-comments.dto';
 
 @ApiTags('comments')
 @Controller('articles/:slug/comments')
@@ -64,12 +66,19 @@ export class CommentsController {
     status: HttpStatus.NOT_FOUND,
     description: 'Article not found',
   })
-  async findAll(@Param('slug') slug: string): Promise<CommentsListResponseDto> {
-    const comments = await this.commentsService.findAllByArticle(slug);
+  async findAll(
+    @Param('slug') slug: string,
+    @Query() query: QueryCommentsDto,
+  ): Promise<CommentsListResponseDto> {
+    const { comments, meta } = await this.commentsService.findAllByArticle(
+      slug,
+      query,
+    );
     return {
       comments: comments.map((comment) =>
         CommentResponseDto.fromEntity(comment),
       ),
+      meta,
     };
   }
 
